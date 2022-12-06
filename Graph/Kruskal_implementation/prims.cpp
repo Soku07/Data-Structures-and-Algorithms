@@ -1,0 +1,181 @@
+#include<iostream>
+using namespace std;
+void displayArray(int arr[])
+{
+    for(int i = 1;i<=6;i++)
+    {
+        cout<<arr[i]<<"\t";
+    }
+    cout<<endl;
+}
+class Graph
+{
+    private:
+    int v,e;
+    int select(int c[],int k[])
+    {   
+        int min = 32767,ver;
+        for(int i =2;i<=v;i++)
+        {
+            if(c[i]<=min && k[i] == 0)
+            {
+                min = c[i];
+                ver = i;
+            }
+        }
+        
+        k[ver] = 1;
+        return ver;
+    }
+    int adjMatrix[10][10];
+    public:
+    Graph()
+    {
+        v = 7;
+        for(int i = 1 ; i<=10;i++)
+        {
+            for(int j = 1;j<=10;j++)
+            {
+                adjMatrix[i][j] = 0;
+            }
+        }
+    }
+    void getv()
+    {
+        cout<<"Enter no. of vertices :: "<<endl;
+        cin>>v;
+    }
+    void CreateGraph();
+    void DisplayGraph();
+    void Prim();
+    void Dijkstra();
+    void CheckInput()
+    {
+        cout<<"CHecking input :: "<<endl;
+    for(int i = 1;i<=v;i++)
+    {
+        for(int j = 1;j<=v;j++)
+        {
+            cout<<adjMatrix[i][j]<<"  ";
+        }
+        cout<<endl;
+    }
+    }
+};
+void Graph :: CreateGraph()
+{   
+    // int s,d,w;
+    // //custom input :: 
+    // cout<<"Enter no. of edges :: "<<endl;
+    // cin>>e;
+    // cout<<"Creating edges :: (Enter appropriate source and destination.)"<<endl;
+    // for(int i = 1;i <= e;i++)
+    // {
+    //     cout<<"Enter Source :: "<<endl;
+    //     cin>>s;
+    //     cout<<"Enter Destination :: "<<endl;
+    //     cin>>d;
+    //     cout<<"Enter Weight :: "<<endl;
+    //     cin>>w;
+    //     adjMatrix[s][d] = w;
+    //     // adjMatrix[d][s] = w;
+    // }   
+// Input graph 1 :: 
+   adjMatrix[1][2] = 9;adjMatrix[1][3] = 1;
+   adjMatrix[2][1] = 9;adjMatrix[2][3] = 5;adjMatrix[2][4] = 19;adjMatrix[2][5] = 17;
+   adjMatrix[3][1] = 1;adjMatrix[3][2] = 5;adjMatrix[3][5] = 13;
+   adjMatrix[4][2] = 19;adjMatrix[4][5] = 25;adjMatrix[4][6] = 2;
+   adjMatrix[5][2] = 17;adjMatrix[5][3] = 13;adjMatrix[5][4] = 25;adjMatrix[5][6] = 14;adjMatrix[5][7] = 21;
+   adjMatrix[6][4] = 2;adjMatrix[6][5] = 14;adjMatrix[6][7] = 8;
+   adjMatrix[7][5] = 21;adjMatrix[7][6] = 8;
+
+//Input Graph 2::
+// adjMatrix[1][2] = 6;adjMatrix[1][3] = 3;
+// adjMatrix[2][1] = 6;adjMatrix[2][3] = 2;adjMatrix[2][4] = 5;
+// adjMatrix[3][1] = 3;adjMatrix[3][4] = 3;adjMatrix[3][2] = 2;adjMatrix[3][5] = 4;
+// adjMatrix[4][2] = 5;adjMatrix[4][3] = 3;adjMatrix[4][5] = 2;adjMatrix[4][6] = 3;
+// adjMatrix[5][3] = 4;adjMatrix[5][4] = 2;adjMatrix[5][6] = 5;
+// adjMatrix[6][4] = 3;adjMatrix[6][5] = 5;
+}
+void Graph :: DisplayGraph()
+{
+    for(int i = 1; i<=v;i++)
+    {
+        cout<<"Adjacent vertices to "<<i<<" are :: "<<endl;
+        for(int j = 1;j<=v;j++)
+        {
+            if(adjMatrix[i][j] != 0)
+            {
+                cout<<j<<"\t";
+            }
+        }
+        cout<<endl;
+    }
+}
+void Graph :: Prim()
+{   
+    int TotWei = 0;
+    int cost[10],known[10],prev[10];
+    int current = 1,Totv = 0;
+    for(int i = 2;i<=v;i++)
+    {
+        cost[i] = 32767;
+        known[i] = 0;
+        prev[i] = 0;
+    }
+    known[1] = 1;cost[1] = 0;prev[1] = -1;
+    cout<<"Process:: "<<endl;
+    while(Totv != v)
+    {   
+
+        for(int i = 1;i<=v;i++)
+        {
+            if(adjMatrix[current][i] > 0 && adjMatrix[current][i] < cost[i] && known[i] == 0)
+            {
+                cost[i] = adjMatrix[current][i];
+                prev[i] = current;
+            }
+        }
+        current = select(cost,known);
+        
+        Totv += 1;
+
+    }
+    cout<<"OUTPUT ::"<<endl;
+    cout<<"Start vertex :: "<<1<<endl;
+    cout<<"Following re the edges in the MST :: "<<endl;
+    for(int i = 2;i<=v;i++)
+    {
+        cout<<"("<<prev[i]<<", "<<i<<")"<<"\t";
+        TotWei += cost[i];
+    }
+    cout<<"\nTotal weight of the MST :: "<<TotWei;
+}
+int main()
+{   
+    Graph g;
+    // g.getv();
+    g.CreateGraph();
+    g.CheckInput();
+    g.Prim();
+    cout<<endl;
+    cout<<"\nEnd of prg"<<endl;
+    return 0;
+}
+//OUTPUT :: 
+// CHecking input :: 
+// 0  9  1  0  0  0  0
+// 9  0  5  19  17  0  0
+// 1  5  0  0  13  0  0
+// 0  19  0  0  25  2  0
+// 0  17  13  25  0  14  21
+// 0  0  0  2  14  0  8
+// 0  0  0  0  21  8  0
+// Process::
+// OUTPUT ::
+// Start vertex :: 1
+// Following re the edges in the MST ::
+// (3, 2)  (1, 3)  (6, 4)  (3, 5)  (5, 6)  (6, 7)
+// Total weight of the MST :: 43
+
+// End of prg

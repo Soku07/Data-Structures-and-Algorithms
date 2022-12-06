@@ -1,0 +1,7 @@
+Enter Postfix exp :: 
+abc-*ef+gh-/+
+Recursive Preorder Traversal :: 
++       *       a       -       b       c       /       +       e       f       -       g       h
+ Non Recursive Preorder Traversal ::
++       *       a       -       b       c       /       +       e       f       -       g       h
+End of prg
